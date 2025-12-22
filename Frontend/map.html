@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Field Staff Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	 <style>
+    #map { height: 80vh; width: 100%; }
+  </style>
+	 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+<header class="bg-blue-600 text-white p-3 flex justify-between items-center">
+  <button onclick="toggleSidebar()" class="text-white text-2xl focus:outline-none">&#9776;</button>
+  <h1 class="text-lg font-semibold">  <a href="index.html" class="inline-block hover:text-white font-semibold py-1 px-1 rounded">
+    ← </a> Health Hospitals FSMS</h1>
+</header>
+<div id="sidebarOverlay" class="fixed inset-0 bg-gray bg-opacity-50 hidden z-40" onclick="closeSidebar()"></div>
+<div id="sidebar" class="fixed inset-y-0 left-0 bg-gray-900 text-white w-64 transform -translate-x-full transition-transform duration-300 z-50">
+  <div class="p-3 flex justify-between items-center border-b border-gray-600"> <span class="font-bold text-lg">Menu</span>
+    <button onclick="closeSidebar()" class="text-white text-xl font-bold">&times;</button>
+  </div>
+  <nav class="p-3 space-y-1"> <a href="index.html" class="block hover:bg-indigo-800 p-3 rounded">🏠 Dashboard</a> <a href="attendance.html" class="block hover:bg-indigo-800 p-3 rounded">🕒 Attendance</a> <a href="customers.html" class="block hover:bg-indigo-800 p-3 rounded">📝 Customers</a> <a href="map.html" class="block hover:bg-indigo-800 p-3 rounded">📍 Map</a> <a href="reports.html" class="block hover:bg-indigo-800 p-2 rounded">📊 Reports</a></nav>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="p-3 mt-2">
+
+   <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2">Your Current Location</h2>
+      <div id="map" class="rounded border border-gray-300"></div>
+    </div>
+
+ 
+</body>
+</html>
+
+</div>
+
+<script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+      document.getElementById('sidebarOverlay').classList.toggle('hidden');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+      document.getElementById('sidebarOverlay').classList.add('hidden');
+    }
+
+    const map = L.map('map').setView([0, 0], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    function updateMapPosition(lat, lng) {
+      map.setView([lat, lng], 15);
+      L.marker([lat, lng]).addTo(map).bindPopup('You are here').openPopup();
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        updateMapPosition(lat, lng);
+      });
+    } else {
+      alert('Geolocation is not supported by your browser.');
+    }
+  </script>
+

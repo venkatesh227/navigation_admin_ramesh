@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Field Staff Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+<header class="bg-blue-600 text-white p-3 flex justify-between items-center">
+  <button onclick="toggleSidebar()" class="text-white text-2xl focus:outline-none">&#9776;</button>
+  <h1 class="text-lg font-semibold">  <a href="index.html" class="inline-block hover:text-white font-semibold py-1 px-1 rounded">
+    ← </a> Health Hospitals FSMS</h1>
+</header>
+<div id="sidebarOverlay" class="fixed inset-0 bg-gray bg-opacity-50 hidden z-40" onclick="closeSidebar()"></div>
+<div id="sidebar" class="fixed inset-y-0 left-0 bg-gray-900 text-white w-64 transform -translate-x-full transition-transform duration-300 z-50">
+  <div class="p-3 flex justify-between items-center border-b border-gray-600"> <span class="font-bold text-lg">Menu</span>
+    <button onclick="closeSidebar()" class="text-white text-xl font-bold">&times;</button>
+  </div>
+  <nav class="p-3 space-y-1"> <a href="index.html" class="block hover:bg-indigo-800 p-3 rounded">🏠 Dashboard</a> <a href="attendance.html" class="block hover:bg-indigo-800 p-3 rounded">🕒 Attendance</a> <a href="customers.html" class="block hover:bg-indigo-800 p-3 rounded">📝 Customers</a> <a href="map.html" class="block hover:bg-indigo-800 p-3 rounded">📍 Map</a>  <a href="reports.html" class="block hover:bg-indigo-800 p-2 rounded">📊 Reports</a></nav>
+</div>
+
+  <div class='p-3 mt-2'>
+    <div class="bg-gray-50 p-4 rounded shadow mb-4">
+
+<div class="flex justify-between items-center ">
+  <h2 class="text-lg font-semibold">📊 Reports</h2>
+  <button onclick="toggleFilter()" class="text-blue-600 text-xl hover:text-blue-800" title="Toggle Filters">🔍</button>
+</div>
+
+
+<div id="filterSection" class="mb-4 mt-3 hidden">
+  <form class="grid grid-cols-1 md:grid-cols-4  gap-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">From Date</label>
+      <input type="date" class="w-full border border-gray-300 rounded px-3 py-2">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">To Date</label>
+      <input type="date" class="w-full border border-gray-300 rounded px-3 py-2">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Place</label>
+      <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Enter location">
+    </div>
+    <div class="flex items-end">
+      <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full">Search</button>
+    </div>
+  </form>
+</div>
+
+      
+    </div>
+    <div class="max-w-md mx-auto ">
+    <h4 class="text-xl font-bold mb-4">📋 29-06-2025</h4>
+    <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Ramesh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+	  
+	   <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Suresh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+    
+	    <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Ramesh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+		
+		 <h4 class="text-xl font-bold mb-4">📋 28-06-2025</h4>
+    <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Ramesh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+	  
+	   <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Suresh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+    
+	    <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Ramesh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+	  
+	 <h4 class="text-xl font-bold mb-4">📋 27-06-2025</h4>
+    <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Ramesh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+	  
+	   <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Suresh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+    
+	    <div class="bg-white p-3 rounded-xl shadow mb-4">
+	  <div class="grid grid-cols-6">
+		<div class="col-span-5">
+     	 <h3 class="font-semibold">Ramesh Clinics</h3>
+     		 <p class="text-sm text-gray-500">Name: Ramesh Babu Rachabattuni<br>Time: 10:00 AM<br>Place: Repalle</p>
+		</div>
+		<div>
+		  <img src="bird.jpg" width="100" height="auto" alt="" onclick="showImageModal(this.src)"/> </div>
+   		</div>
+	</div>
+		
+		
+  </div>
+  </div>
+
+	<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 items-center justify-center">
+  <div class="relative">
+    <img id="zoomedImage" src="" class="max-w-full max-h-screen rounded shadow-lg" />
+    <button onclick="closeImageModal()" class="absolute top-2 right-2 text-white text-3xl font-bold">&times;</button>
+  </div>
+</div>
+	
+	
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    document.getElementById('sidebarOverlay').classList.toggle('hidden');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+    document.getElementById('sidebarOverlay').classList.add('hidden');
+  }
+  function toggleFilter() {
+    document.getElementById('filterSection').classList.toggle('hidden');
+  }
+</script>
+	
+	<script>
+  function showImageModal(src) {
+    const modal = document.getElementById('imageModal');
+    const zoomed = document.getElementById('zoomedImage');
+    zoomed.src = src;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+</script>
