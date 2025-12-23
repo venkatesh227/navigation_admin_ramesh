@@ -186,6 +186,11 @@ include 'header.php';
 
 
 <script>
+
+    function isOnlyLetters(str) {
+    return /^[A-Za-z ]+$/.test(str);
+}
+
     /* ------------------------
   FRONTEND HELPERS
 ---------------------------*/
@@ -223,14 +228,23 @@ include 'header.php';
 
         let hasError = false;
 
-        if (name === "") {
-            showError('#err-full-name', 'Full name required');
-            hasError = true;
-        }
-        if (desig === "") {
-            showError('#err-designation', 'Designation required');
-            hasError = true;
-        }
+   if (name === "") {
+    showError('#err-full-name', 'Full name required');
+    hasError = true;
+} else if (!isOnlyLetters(name)) {
+    showError('#err-full-name', 'Only alphabets are allowed');
+    hasError = true;
+}
+
+if (desig === "") {
+    showError('#err-designation', 'Designation required');
+    hasError = true;
+} else if (!isOnlyLetters(desig)) {
+    showError('#err-designation', 'Only alphabets are allowed');
+    hasError = true;
+}
+
+
         if (branch === "") {
             showError('#err-Branch', 'Branch required');
             hasError = true;
@@ -449,13 +463,21 @@ include 'header.php';
         let hasError = false;
 
         if (name === "") {
-            showError('#err-edit-full-name', 'Required');
-            hasError = true;
-        }
-        if (desig === "") {
-            showError('#err-edit-designation', 'Required');
-            hasError = true;
-        }
+    showError('#err-edit-full-name', 'Required');
+    hasError = true;
+} else if (!isOnlyLetters(name)) {
+    showError('#err-edit-full-name', 'Only alphabets are allowed');
+    hasError = true;
+}
+
+if (desig === "") {
+    showError('#err-edit-designation', 'Required');
+    hasError = true;
+} else if (!isOnlyLetters(desig)) {
+    showError('#err-edit-designation', 'Only alphabets are allowed');
+    hasError = true;
+}
+
         if (branch === "") {
             showError('#err-edit-branch', 'Required');
             hasError = true;

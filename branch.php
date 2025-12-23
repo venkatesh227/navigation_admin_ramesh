@@ -52,19 +52,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_branch'])) {
     $address = trim($_POST['address']);
     $show_modal = false;
 
-    // Validation
-    if (empty($name)) {
-        $errors['name'] = "Branch name is required";
-        $show_modal = true;
-    }
-    if (empty($location)) {
-        $errors['location'] = "Branch location is required";
-        $show_modal = true;
-    }
-    if (empty($address)) {
-        $errors['address'] = "Address is required";
-        $show_modal = true;
-    }
+   // Validation
+if (empty($name)) {
+    $errors['name'] = "Branch name is required";
+    $show_modal = true;
+} elseif (!preg_match("/^[a-zA-Z ]+$/", $name)) {
+    $errors['name'] = "Only letters and spaces allowed";
+    $show_modal = true;
+}
+
+if (empty($location)) {
+    $errors['location'] = "Branch location is required";
+    $show_modal = true;
+} elseif (!preg_match("/^[a-zA-Z ]+$/", $location)) {
+    $errors['location'] = "Only letters and spaces allowed";
+    $show_modal = true;
+}
+
+if (empty($address)) {
+    $errors['address'] = "Address is required";
+    $show_modal = true;
+}
+
 
     //  Duplicate check (same name + same location not allowed)
     $dup_check = mysqli_query($conn, "SELECT id FROM branches WHERE name='$name' AND location='$location' LIMIT 1");
@@ -100,18 +109,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_branch'])) {
     $errors = ['name' => '', 'location' => '', 'address' => ''];
 
     // Validation
-    if (empty($name)) {
-        $errors['name'] = "Branch name is required";
-        $show_modal = true;
-    }
-    if (empty($location)) {
-        $errors['location'] = "Branch location is required";
-        $show_modal = true;
-    }
-    if (empty($address)) {
-        $errors['address'] = "Address is required";
-        $show_modal = true;
-    }
+   // Validation
+if (empty($name)) {
+    $errors['name'] = "Branch name is required";
+    $show_modal = true;
+} elseif (!preg_match("/^[a-zA-Z ]+$/", $name)) {
+    $errors['name'] = "Only letters and spaces allowed";
+    $show_modal = true;
+}
+
+if (empty($location)) {
+    $errors['location'] = "Branch location is required";
+    $show_modal = true;
+} elseif (!preg_match("/^[a-zA-Z ]+$/", $location)) {
+    $errors['location'] = "Only letters and spaces allowed";
+    $show_modal = true;
+}
+
+if (empty($address)) {
+    $errors['address'] = "Address is required";
+    $show_modal = true;
+}
+
 
     //  Duplicate check (exclude current record)
     $dup_check = mysqli_query($conn, "SELECT id FROM branches WHERE name='$name' AND location='$location' AND id != $branch_id LIMIT 1");
@@ -307,3 +326,4 @@ include 'header.php';
 <?php endif; ?>
 
 <?php include 'footer.php'; ?>
+

@@ -86,45 +86,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_employee'])) {
     //     $errors['title'] = "Title is required";
     //     $show_modal = true;
     // }
+// ---------------- VALIDATION ----------------
 
-    if (empty($emp_name)) {
-        $errors['name'] = "Full name is required";
-        $show_modal = true;
-    }
+// Employee Number → numbers only
+if (!empty($emp_title) && !preg_match('/^[0-9]+$/', $emp_title)) {
+    $errors['Employee No'] = "Only numbers are allowed";
+    $show_modal = true;
+}
 
-    if (empty($emp_designation)) {
-        $errors['designation'] = "Designation is required";
-        $show_modal = true;
-    }
+// Full Name → alphabets + spaces only
+if (empty($emp_name)) {
+    $errors['name'] = "Full name is required";
+    $show_modal = true;
+} elseif (!preg_match('/^[A-Za-z ]+$/', $emp_name)) {
+    $errors['name'] = "Only alphabets and spaces are allowed";
+    $show_modal = true;
+}
 
-    if (empty($emp_phone)) {
-        $errors['phone'] = "Phone number is required";
-        $show_modal = true;
-    } elseif (!preg_match('/^\d{10}$/', $emp_phone)) {
-        $errors['phone'] = "Enter valid 10-digit phone number";
-        $show_modal = true;
-    }
+// Designation → alphabets + spaces only
+if (empty($emp_designation)) {
+    $errors['designation'] = "Designation is required";
+    $show_modal = true;
+} elseif (!preg_match('/^[A-Za-z ]+$/', $emp_designation)) {
+    $errors['designation'] = "Only alphabets and spaces are allowed";
+    $show_modal = true;
+}
 
-    // DOB required
-    // DOB validation
+// Phone → exactly 10 digits, start with 6/7/8/9
+if (empty($emp_phone)) {
+    $errors['phone'] = "Phone number is required";
+    $show_modal = true;
+} elseif (!preg_match('/^[6-9][0-9]{9}$/', $emp_phone)) {
+    $errors['phone'] = "Only 10-digit numbers starting with 6, 7, 8, or 9 are allowed";
+    $show_modal = true;
+}
+
+// DOB
 if (empty($emp_dob)) {
     $errors['dob'] = "Date of Birth is required";
     $show_modal = true;
-} else {
-    // Cannot select future date
-    $today = date('Y-m-d');
-    if ($emp_dob > $today) {
-        $errors['dob'] = "Date of Birth cannot be in the future.";
-        $show_modal = true;
-    }
-
-    // Optional: Minimum age check (uncomment if needed)
-    // $minAge = date('Y-m-d', strtotime('-18 years'));
-    // if ($emp_dob > $minAge) {
-    //     $errors['dob'] = "Employee must be at least 18 years old.";
-    //     $show_modal = true;
-    // }
+} elseif ($emp_dob > date('Y-m-d')) {
+    $errors['dob'] = "Date of Birth cannot be in the future";
+    $show_modal = true;
 }
+
+// Email → alphabets@maha.com only
+if (empty($emp_email)) {
+    $errors['email'] = "Email is required";
+    $show_modal = true;
+} elseif (!preg_match('/^[A-Za-z]+[0-9]*@[A-Za-z]+\.[A-Za-z]{2,}$/', $emp_email)) {
+    $errors['email'] = "Email must start with alphabets, numbers allowed after (example: cool1@gmail.com)";
+    $show_modal = true;
+}
+
+
+// Sales Manager
+if (empty($emp_sales_manager)) {
+    $errors['sales_manager'] = "Sales Manager is required";
+    $show_modal = true;
+}
+
 
 
     // Email required + format
@@ -157,20 +178,34 @@ if (empty($emp_dob)) {
     }
 
     // Phone duplicate
-    if (!$show_modal) {
-        $phone_esc = mysqli_real_escape_string($conn, $emp_phone);
-        $exclude = $emp_id > 0 ? " AND id != $emp_id " : "";
-        $dup_check = mysqli_query(
-            $conn,
-            "SELECT id FROM employees 
-             WHERE phone_no='$phone_esc' $exclude
-             LIMIT 1"
-        );
-        if ($dup_check && mysqli_num_rows($dup_check) > 0) {
+   // Phone duplicate check (Sales Manager vs Sales Executive)
+if (!$show_modal) {
+    $phone_esc = mysqli_real_escape_string($conn, $emp_phone);
+    $exclude = $emp_id > 0 ? " AND e.id != $emp_id " : "";
+
+    $dup_check = mysqli_query(
+        $conn,
+        "SELECT e.id, u.role_id
+         FROM employees e
+         JOIN users u ON e.user_id = u.id
+         WHERE e.phone_no = '$phone_esc' $exclude
+         LIMIT 1"
+    );
+
+    if ($dup_check && mysqli_num_rows($dup_check) > 0) {
+        $row = mysqli_fetch_assoc($dup_check);
+
+        // role_id: 2 = Sales Manager, 3 = Sales Executive
+        if ($row['role_id'] == 2) {
+            $errors['phone'] = "This phone number is already assigned to another user (Sales Manager).";
+        } else {
             $errors['phone'] = "Phone number already exists.";
-            $show_modal = true;
         }
+
+        $show_modal = true;
     }
+}
+
 
     // If validation OK -> insert/update
     if (!$show_modal) {
@@ -248,6 +283,25 @@ if (empty($emp_dob)) {
             $u_name_esc = mysqli_real_escape_string($conn, $username);
             $u_pass_esc = mysqli_real_escape_string($conn, $password_hash);
 
+            // -------- CHECK DUPLICATE USERNAME (PHONE) IN USERS TABLE --------
+$checkUser = mysqli_query(
+    $conn,
+    "SELECT id, role_id FROM users WHERE user_name = '$u_name_esc' LIMIT 1"
+);
+
+if ($checkUser && mysqli_num_rows($checkUser) > 0) {
+    $row = mysqli_fetch_assoc($checkUser);
+
+    if ($row['role_id'] == 2) {
+        $errors['phone'] = "This phone number is already assigned to a Sales Manager.";
+    } else {
+        $errors['phone'] = "This phone number is already assigned to another Sales Executive.";
+    }
+
+    $show_modal = true;
+}
+
+
             $query1 = "INSERT INTO users 
                         (user_name, password, email, status, role_id, created_at, created_by)
                        VALUES 
@@ -271,7 +325,7 @@ if (empty($emp_dob)) {
                 $newEmployeeID = "EMP_0001";
             }
 
-            if (mysqli_query($conn, $query1)) {
+if (!$show_modal && mysqli_query($conn, $query1)) {
                 $user_id = mysqli_insert_id($conn);
 
                 $query2 = "
@@ -292,7 +346,6 @@ if (empty($emp_dob)) {
                     $show_modal = true;
                 }
             } else {
-                $success = "Database Error (users): " . mysqli_error($conn);
                 $show_modal = true;
             }
         }

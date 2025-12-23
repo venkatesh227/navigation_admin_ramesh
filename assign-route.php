@@ -246,6 +246,37 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == "update_assign") {
         exit;
     }
 
+
+    // ================= CLINIC DUPLICATE CHECK =================
+$clinic_csv = implode(",", array_map('intval', $clinics));
+
+$clinicDup = mysqli_query($conn, "
+    SELECT am.id
+    FROM assigned_members am
+    JOIN assign_routes ar ON ar.id = am.assigned_route_id
+    WHERE am.member_id IN ($clinic_csv)
+      AND ar.route_id = '$route_id'
+      AND (
+            ar.start_date <= '$end'
+        AND ar.end_date   >= '$start'
+      )
+");
+
+if (mysqli_num_rows($clinicDup) > 0) {
+    echo json_encode([
+        "status" => "error",
+        "msg" => "This Clinic is already assigned to another Sales Executive for the same Route and Date range."
+    ]);
+    exit;
+}
+
+// ⬇⬇ KEEP YOUR EXISTING INSERT BELOW ⬇⬇
+mysqli_query($conn, "
+    INSERT INTO assign_routes 
+    (employee_id, route_id, group_id, start_date, end_date, created_at, created_by)
+    VALUES ('$employee_id', '$route_id', '$group_csv', '$start', '$end', NOW(), '{$_SESSION['user_id']}')
+");
+
     $group_csv = implode(",", array_map('intval', $group_ids));
 
     mysqli_query($conn, "

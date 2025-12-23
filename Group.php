@@ -460,83 +460,130 @@ if (!alphaOnly.test(groupName)) {
 
     });
 
+    
+
     // Member edit via actions removed (only Edit Group is shown). Member add still available via Add Member button.
 
     // Add Member validation
-    $("#saveMember").click(function (e) {
+    
+ 
+   $("#saveMember").click(function (e) {
     e.preventDefault();
 
-    // clear previous
-    ["#routeSelect", "#doctorName", "#doctorQualification", "#clinicName", "#address", "#location", "#mobile", "#altMobile"]
-        .forEach(function (sel) {
-            $(sel).css("border-color", "#d9dce7");
-        });
+    // RESET ERRORS
+    [
+        "#routeSelect", "#doctorName", "#doctorQualification",
+        "#clinicName", "#address", "#location", "#mobile", "#altMobile"
+    ].forEach(id => $(id).css("border-color", "#d9dce7"));
 
-    ["#routeError", "#doctorNameError", "#doctorQualificationError", "#clinicNameError",
-        "#addressError", "#locationError", "#mobileError"]
-        .forEach(function (id) {
-            $(id).text("");
-        });
+    [
+        "#routeError", "#doctorNameError", "#doctorQualificationError",
+        "#clinicNameError", "#addressError", "#locationError", "#mobileError"
+    ].forEach(id => $(id).text(""));
 
+    let alphaOnly  = /^[A-Za-z ]+$/;
+    let mobileOnly = /^[0-9]{10}$/;
     let hasError = false;
 
-    let route = $("#routeSelect").val().trim();
-    let name = $("#doctorName").val().trim();
-    let qual = $("#doctorQualification").val().trim();
-    let clinic = $("#clinicName").val().trim();
-    let address = $("#address").val().trim();
-    let location = $("#location").val().trim();
-    let mobile = $("#mobile").val().trim();
-    let alt_mobile = $("#altMobile").val().trim();
+    let route     = $("#routeSelect").val().trim();
+    let name      = $("#doctorName").val().trim();
+    let qual      = $("#doctorQualification").val().trim();
+    let clinic    = $("#clinicName").val().trim();
+    let address   = $("#address").val().trim();
+    let location  = $("#location").val().trim();
+    let mobile    = $("#mobile").val().trim();
+    let altMobile = $("#altMobile").val().trim();
 
+    // ROUTE
     if (!route) {
-        $("#routeSelect").css("border-color", "red");
-        $("#routeError").text("Please select a route");
+        $("#routeSelect").css("border-color","red");
+        $("#routeError").text("Route is required");
         hasError = true;
     }
+
+    // NAME
     if (!name) {
-        $("#doctorName").css("border-color", "red");
+        $("#doctorName").css("border-color","red");
         $("#doctorNameError").text("Name is required");
         hasError = true;
-    }
-    if (!qual) {
-        $("#doctorQualification").css("border-color", "red");
-        $("#doctorQualificationError").text("Qualification is required");
-        hasError = true;
-    }
-    if (!clinic) {
-        $("#clinicName").css("border-color", "red");
-        $("#clinicNameError").text("Clinic Name is required");
-        hasError = true;
-    }
-    if (!address) {
-        $("#address").css("border-color", "red");
-        $("#addressError").text("Address is required");
-        hasError = true;
-    }
-    if (!location) {
-        $("#location").css("border-color", "red");
-        $("#locationError").text("Location is required");
-        hasError = true;
-    }
-    if (!mobile) {
-        $("#mobile").css("border-color", "red");
-        $("#mobileError").text("Mobile Number is required");
+    } else if (!alphaOnly.test(name)) {
+        $("#doctorName").css("border-color","red");
+        $("#doctorNameError").text("Only alphabets allowed");
         hasError = true;
     }
 
-    // 🔥 NEW FIX: Main Mobile & Alternate Mobile cannot match
-    if (alt_mobile !== "" && mobile === alt_mobile) {
-        $("#altMobile").css("border-color", "red");
-        $("#mobile").css("border-color", "red");
-        $("#mobileError").text("Mobile & Alternate Mobile cannot be the same");
+    // QUALIFICATION
+    if (!qual) {
+        $("#doctorQualification").css("border-color","red");
+        $("#doctorQualificationError").text("Qualification is required");
+        hasError = true;
+    } else if (!alphaOnly.test(qual)) {
+        $("#doctorQualification").css("border-color","red");
+        $("#doctorQualificationError").text("Only alphabets allowed");
+        hasError = true;
+    }
+
+    // CLINIC NAME
+    if (!clinic) {
+        $("#clinicName").css("border-color","red");
+        $("#clinicNameError").text("Clinic Name is required");
+        hasError = true;
+    } else if (!alphaOnly.test(clinic)) {
+        $("#clinicName").css("border-color","red");
+        $("#clinicNameError").text("Only alphabets allowed");
+        hasError = true;
+    }
+
+    // ADDRESS
+    if (!address) {
+        $("#address").css("border-color","red");
+        $("#addressError").text("Address is required");
+        hasError = true;
+    } else if (!alphaOnly.test(address)) {
+        $("#address").css("border-color","red");
+        $("#addressError").text("Only alphabets allowed");
+        hasError = true;
+    }
+
+    // LOCATION
+    if (!location) {
+        $("#location").css("border-color","red");
+        $("#locationError").text("Location is required");
+        hasError = true;
+    } else if (!alphaOnly.test(location)) {
+        $("#location").css("border-color","red");
+        $("#locationError").text("Only alphabets allowed");
+        hasError = true;
+    }
+
+    // MOBILE
+    if (!mobile) {
+        $("#mobile").css("border-color","red");
+        $("#mobileError").text("Mobile number is required");
+        hasError = true;
+    } else if (!mobileOnly.test(mobile)) {
+        $("#mobile").css("border-color","red");
+        $("#mobileError").text("Mobile must be 10 digits");
+        hasError = true;
+    }
+
+    // ALT MOBILE
+    if (altMobile && !mobileOnly.test(altMobile)) {
+        $("#altMobile").css("border-color","red");
+        $("#mobileError").text("Alternative mobile must be 10 digits");
+        hasError = true;
+    }
+
+    if (altMobile && mobile === altMobile) {
+        $("#altMobile").css("border-color","red");
+        $("#mobile").css("border-color","red");
+        $("#mobileError").text("Mobile & Alternative must be different");
         hasError = true;
     }
 
     if (hasError) return;
 
-    // prepare data to submit
-    var payload = {
+    let payload = {
         action: $("#memberId").val() ? "update_member" : "add_member",
         member_id: $("#memberId").val() || "",
         group_id: $("#memberGroupId").val(),
@@ -547,41 +594,31 @@ if (!alphaOnly.test(groupName)) {
         address: address,
         location: location,
         mobile: mobile,
-        alt_mobile: alt_mobile
+        alt_mobile: altMobile
     };
 
     $.post("group_actions.php", payload, function (resp) {
-        var r = {};
+        let r = {};
         try {
             r = JSON.parse(resp);
-        } catch (e) {
-            console.error("Raw server response for add_member:", resp);
-            showError("Server Error", "Unexpected server response");
+        } catch {
+            alert("Invalid server response");
             return;
         }
 
         if (r.status === "error") {
-            if (r.field && r.field === "mobile") {
-                $("#mobile").css("border-color", "red");
-                $("#mobileError").text(r.message);
-            } else {
-                showError("Error", r.message);
-            }
+            $("#mobileError").text(r.message);
             return;
         }
 
-        if (r.status === "success") {
-            $("#addMemberModal").modal("hide");
-            showToast("success", "Member added successfully");
-            setTimeout(function () {
-                window.location.reload(true);
-            }, 1500);
-        }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("AJAX error add_member:", textStatus, errorThrown, jqXHR.responseText);
-        showError("Request failed", textStatus);
+        $("#addMemberModal").modal("hide");
+        showToast("success","Member saved successfully");
+        setTimeout(() => location.reload(), 1200);
     });
 });
+
+
+
 
 
     // when opening modal via button, populate group id and clear previous values
@@ -695,4 +732,6 @@ if (!alphaOnly.test(groupName)) {
         });
 
     });
+
+    
 </script>

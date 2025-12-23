@@ -38,6 +38,8 @@ if ($resAtt && $resAtt->num_rows === 1) {
         $attendanceState = 'in';
     } elseif (!empty($a['clock_in']) && !empty($a['clock_out'])) {
         $attendanceState = 'done';
+    }else{
+        $attendanceState = 'none';
     }
 }
 $stmtAtt->close();
@@ -161,6 +163,7 @@ include 'header.php';
             <div>
                 <p class="text-xs uppercase tracking-wide opacity-80">Current Status</p>
                 <p class="font-bold text-lg">
+
                     <?= $attendanceState === 'in' ? '🟢 Checked In' : ($attendanceState === 'done' ? '🏁 Completed' : '🔴 Not Checked In') ?>
                 </p>
             </div>
