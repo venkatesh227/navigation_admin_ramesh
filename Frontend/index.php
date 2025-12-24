@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($userFound) {
                  // ===== LOGIN SUCCESS =====
-                 session_regenerate_id(true);
+                //  session_regenerate_id(true);
                  $_SESSION['employee_id']          = $row['id'];
                  $_SESSION['employee_name']        = $row['name'];
                  $_SESSION['employee_designation'] = $row['designation'] ?? null;
