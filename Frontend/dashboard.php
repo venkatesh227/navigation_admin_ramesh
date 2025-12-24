@@ -179,6 +179,7 @@ include 'header.php';
             <?php endif; ?>
         </div>
     </div>
+    
 
     <!-- TODAY TASKS -->
     <div class="mb-6">
